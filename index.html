@@ -175,7 +175,7 @@
                       重启人生
                     </button>
                     <p class="ending-note">
-                      本互动新闻有9条角色情境、超过80个不同结局，欢迎继续探索。
+                      本互动新闻有10条角色情境、超过80个不同结局，欢迎继续探索。
                     </p>
                   </div>
                 </div>
@@ -243,6 +243,13 @@
             @click="$store.game.toggleBgm()"
           >
             <span x-text="$store.game.bgmEnabled ? '音乐：开' : '音乐：关'"></span>
+          </button>
+          <button
+            class="action-btn"
+            x-show="$store.game.fullscreenSupported"
+            @click="$store.game.toggleFullscreen()"
+          >
+            <span x-text="$store.game.isFullscreen ? '退出全屏' : '全屏'"></span>
           </button>
         </div>
 

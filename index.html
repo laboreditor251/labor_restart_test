@@ -125,11 +125,13 @@
         class="scene-wrap mt-4 rounded-[2px_6px_3px_5px] border border-line bg-card p-5 shadow-paper md:p-6"
         x-show="!$store.game.fatalError && ($store.game.hasAcknowledgedWarning || !$store.game.story?.trigger_warning)"
       >
+      <!--
         <div class="mb-3 flex justify-end" x-show="$store.game.currentNodeId">
           <span class="inline-flex items-center rounded-[6px] border border-line bg-card2 px-3 py-1 font-sanscn text-xs tracking-[0.04em] text-soft md:text-sm">
             Node: <span class="ml-1 text-ink" x-text="$store.game.currentNodeId"></span>
           </span>
         </div>
+      -->
         <div
           class="scene"
           :class="{
@@ -226,6 +228,7 @@
           >
             重启人生
           </button>
+          <!--
           <button
             class="action-btn action-btn-ghost"
             :disabled="$store.game.isTransitioning"
@@ -233,6 +236,7 @@
           >
             Debug
           </button>
+          -->
           <button
             class="action-btn"
             :class="$store.game.bgmEnabled ? 'action-btn-music-on' : 'action-btn-music-off'"

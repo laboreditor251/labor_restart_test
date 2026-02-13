@@ -578,22 +578,30 @@
         const now = ctx.currentTime;
         const osc = ctx.createOscillator();
         const osc2 = ctx.createOscillator();
+        const osc3 = ctx.createOscillator();
         const gain = ctx.createGain();
         const gain2 = ctx.createGain();
+        const gain3 = ctx.createGain();
         const filter = ctx.createBiquadFilter();
         const filter2 = ctx.createBiquadFilter();
+        const filter3 = ctx.createBiquadFilter();
         const noiseSource = ctx.createBufferSource();
         const noiseFilter = ctx.createBiquadFilter();
         const noiseGain = ctx.createGain();
 
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(250, now);
-        osc.frequency.exponentialRampToValueAtTime(170, now + 0.06);
+        osc.frequency.setValueAtTime(270, now);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 0.06);
 
         // Slightly detuned overtone for a less synthetic, more tactile timbre.
         osc2.type = "sine";
-        osc2.frequency.setValueAtTime(500, now);
-        osc2.frequency.exponentialRampToValueAtTime(340, now + 0.05);
+        osc2.frequency.setValueAtTime(560, now);
+        osc2.frequency.exponentialRampToValueAtTime(360, now + 0.05);
+
+        // Short high-frequency attack for better phone speaker audibility.
+        osc3.type = "square";
+        osc3.frequency.setValueAtTime(1850, now);
+        osc3.frequency.exponentialRampToValueAtTime(1250, now + 0.018);
 
         filter.type = "lowpass";
         filter.frequency.setValueAtTime(1700, now);
@@ -602,13 +610,20 @@
         filter2.frequency.setValueAtTime(760, now);
         filter2.Q.setValueAtTime(0.7, now);
 
+        filter3.type = "highpass";
+        filter3.frequency.setValueAtTime(1250, now);
+
         gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.12, now + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.2, now + 0.008);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
 
         gain2.gain.setValueAtTime(0.0001, now);
-        gain2.gain.exponentialRampToValueAtTime(0.05, now + 0.006);
+        gain2.gain.exponentialRampToValueAtTime(0.08, now + 0.006);
         gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+
+        gain3.gain.setValueAtTime(0.0001, now);
+        gain3.gain.exponentialRampToValueAtTime(0.06, now + 0.0025);
+        gain3.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
 
         const noiseBuffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * 0.03)), ctx.sampleRate);
         const noiseData = noiseBuffer.getChannelData(0);
@@ -618,10 +633,10 @@
         noiseSource.buffer = noiseBuffer;
 
         noiseFilter.type = "highpass";
-        noiseFilter.frequency.setValueAtTime(1800, now);
+        noiseFilter.frequency.setValueAtTime(1600, now);
 
         noiseGain.gain.setValueAtTime(0.0001, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.016, now + 0.0025);
+        noiseGain.gain.exponentialRampToValueAtTime(0.028, now + 0.0025);
         noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
 
         osc.connect(filter);
@@ -630,16 +645,21 @@
         osc2.connect(filter2);
         filter2.connect(gain2);
         gain2.connect(ctx.destination);
+        osc3.connect(filter3);
+        filter3.connect(gain3);
+        gain3.connect(ctx.destination);
         noiseSource.connect(noiseFilter);
         noiseFilter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
 
         osc.start(now);
         osc2.start(now);
+        osc3.start(now);
         noiseSource.start(now);
 
         osc.stop(now + 0.095);
         osc2.stop(now + 0.07);
+        osc3.stop(now + 0.024);
         noiseSource.stop(now + 0.03);
       },
 

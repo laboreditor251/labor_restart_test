@@ -576,6 +576,7 @@
       "text": "【第三步】提供文件证明事故发生情况。\n\n刚摔倒时站长劝你别报警，由于事发后24小时内未报案，你未能调取当时道路监控。"
     },
     "b4_aab_step4": {
+      "image": "./assets/images/b4_aab_step4_5.jpg",
       "choices": [
         {
           "label": "继续",
@@ -585,6 +586,7 @@
       "text": "【最后】几经周折，事故发生后第661天，仲裁委裁定公司应支付你118221元工伤赔偿。"
     },
     "b4_aab_step5": {
+      "image": "./assets/images/b4_aab_step4_5.jpg",
       "choices": [
         {
           "label": "坚持，反诉公司，保持主动",
@@ -679,6 +681,7 @@
       "text": "你拿到了更完整的事故材料，但执行阶段仍可能被拉长。\n\n可参考其他案例：香港南亚外卖骑手受伤后5年才获宣判，法院认定外卖公司承担80%责任。\n\n[https://mp.weixin.qq.com/s/6-t-kRI6i7JjVBIb8YEYxg](https://mp.weixin.qq.com/s/6-t-kRI6i7JjVBIb8YEYxg)"
     },
     "b4_ac": {
+      "image": "./assets/images/b4_ac.jpg",
       "choices": [
         {
           "label": "回老家看病、休息",

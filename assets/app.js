@@ -22,6 +22,9 @@
       debugNodeId: "pre_origin",
       bgmEnabled: true,
       bgmAudio: null,
+      fullscreenSupported: false,
+      isFullscreen: false,
+      fullscreenBound: false,
       uiAudioCtx: null,
       uiClickBound: false,
 
@@ -43,6 +46,7 @@
       async loadStory() {
         try {
           this.initBgm();
+          this.initFullscreen();
           this.bindUiClickFx();
           let res = await fetch("./assets/story.json", { cache: "no-store" });
           if (!res.ok) {
@@ -80,6 +84,7 @@
         if (!this.story?.trigger_warning) return;
         this.hasAcknowledgedWarning = true;
         this.showTriggerWarning = false;
+        this.enterFullscreen();
         this.tryPlayBgm();
       },
 
@@ -91,6 +96,7 @@
           return;
         }
         this.hasAcknowledgedWarning = true;
+        this.enterFullscreen();
         this.tryPlayBgm();
       },
 
@@ -687,6 +693,72 @@
           this.tryPlayBgm();
         } else {
           this.bgmAudio.pause();
+        }
+      },
+
+      initFullscreen() {
+        if (typeof document === "undefined") return;
+        const root = document.documentElement;
+        this.fullscreenSupported = Boolean(
+          root.requestFullscreen || root.webkitRequestFullscreen || root.msRequestFullscreen
+        );
+        this.isFullscreen = this.getIsFullscreen();
+
+        if (this.fullscreenBound) return;
+        this.fullscreenBound = true;
+
+        const sync = () => {
+          this.isFullscreen = this.getIsFullscreen();
+        };
+
+        document.addEventListener("fullscreenchange", sync);
+        document.addEventListener("webkitfullscreenchange", sync);
+        document.addEventListener("MSFullscreenChange", sync);
+      },
+
+      getIsFullscreen() {
+        if (typeof document === "undefined") return false;
+        return Boolean(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+      },
+
+      toggleFullscreen() {
+        if (!this.fullscreenSupported || typeof document === "undefined") return;
+
+        const doc = document;
+        const root = document.documentElement;
+        const inFullscreen = this.getIsFullscreen();
+
+        try {
+          if (inFullscreen) {
+            const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if (exit) {
+              const ret = exit.call(doc);
+              if (ret && typeof ret.catch === "function") ret.catch(() => {});
+            }
+            return;
+          }
+
+          const request = root.requestFullscreen || root.webkitRequestFullscreen || root.msRequestFullscreen;
+          if (request) {
+            const ret = request.call(root);
+            if (ret && typeof ret.catch === "function") ret.catch(() => {});
+          }
+        } catch (_err) {
+          // Ignore fullscreen errors to avoid breaking interaction flow.
+        }
+      },
+
+      enterFullscreen() {
+        if (!this.fullscreenSupported || typeof document === "undefined") return;
+        if (this.getIsFullscreen()) return;
+        const root = document.documentElement;
+        const request = root.requestFullscreen || root.webkitRequestFullscreen || root.msRequestFullscreen;
+        if (!request) return;
+        try {
+          const ret = request.call(root);
+          if (ret && typeof ret.catch === "function") ret.catch(() => {});
+        } catch (_err) {
+          // Ignore fullscreen errors to avoid breaking interaction flow.
         }
       },
 
